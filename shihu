@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>西湖里質感生活地圖｜精選獨立零售店鋪</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .serif-title { font-family: 'Noto Serif TC', serif; }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased pb-24">
+
+  <!-- 頂部：西湖里觀光地圖導覽列 (可切換店鋪) -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 px-4 py-3">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="bg-emerald-800 text-white text-xs font-bold px-2.5 py-1 rounded-full">內湖・西湖里</span>
+        <h1 class="text-sm font-bold text-stone-700 tracking-wide">西湖・港墘獨立店鋪觀光地圖</h1>
+      </div>
+      <!-- 店鋪切換器 -->
+      <div class="flex gap-2 overflow-x-auto pb-1 sm:pb-0 text-xs font-medium">
+        <button onclick="switchShop('flora')" id="btn-flora" class="px-3 py-1.5 rounded-full bg-stone-900 text-white whitespace-nowrap transition">01. 蒔光花藝選物</button>
+        <button onclick="switchShop('coffee')" id="btn-coffee" class="px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 whitespace-nowrap transition">02. 環山焙豆所</button>
+        <button onclick="switchShop('zakka')" id="btn-zakka" class="px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 whitespace-nowrap transition">03. 日日器皿雜貨</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="max-w-4xl mx-auto">
+
+    <!-- Hero 區域：高視覺說服力 + 核心價值主張 -->
+    <section class="relative bg-stone-900 text-white overflow-hidden sm:rounded-b-3xl shadow-xl">
+      <!-- 背景圖片 (採用真實店面線索重塑的高級攝影視覺) -->
+      <div class="absolute inset-0 opacity-65">
+        <img id="hero-img" src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=1600&q=85" alt="店鋪外觀與氛圍" class="w-full h-full object-cover object-center transition-all duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/60 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 px-6 pt-20 pb-12 sm:px-12 sm:pt-28 sm:pb-16 flex flex-col items-start">
+        <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs mb-4">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="shop-badge">西湖捷運站 1 號出口步行 3 分鐘・營業中</span>
+        </div>
+
+        <h2 id="hero-title" class="serif-title text-3xl sm:text-5xl font-bold leading-tight mb-4">
+          把法式街角的自然呼吸，<br>帶進你的內科日常。
+        </h2>
+
+        <p id="hero-subtitle" class="text-stone-200 text-base sm:text-lg max-w-2xl mb-8 leading-relaxed font-light">
+          位於西湖里 285 巷靜謐轉角。我們每日清晨嚴選新鮮葉材與進口鮮花，為忙碌的內科人提供「線上預訂、下班免等快取」的質感花禮與辦公室療癒植栽。
+        </p>
+
+        <!-- 高轉換雙 CTA 按鈕 -->
+        <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
+          <a href="#conversion-offer" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-7 py-4 rounded-xl text-center shadow-lg shadow-emerald-950/50 transition flex items-center justify-center gap-2">
+            <span id="primary-cta-text">領取首次到店 9 折＆預訂快取</span>
+            <span>→</span>
+          </a>
+          <a href="#location-info" class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white font-medium px-6 py-4 rounded-xl text-center transition">
+            查看 Google Maps 路線
+          </a>
+        </div>
+
+        <!-- 信任指標微數據 -->
+        <div class="mt-8 pt-6 border-t border-white/15 w-full flex flex-wrap gap-6 text-xs text-stone-300">
+          <div><strong class="text-white text-sm">4.9 ★</strong> Google 真實五星好評</div>
+          <div><strong class="text-white text-sm">15 分鐘</strong> 內科臨時花禮極速包裝</div>
+          <div><strong class="text-white text-sm">100%</strong> 嚴選當季新鮮花材與塊根</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 為什麼選擇我們 (針對西湖里客群的痛點解決模組) -->
+    <section class="px-6 py-12 sm:px-12">
+      <div class="text-center max-w-xl mx-auto mb-10">
+        <span class="text-emerald-700 text-xs font-bold tracking-widest uppercase">Why Visit Us in Xihu</span>
+        <h3 id="feature-heading" class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 mt-1">專為西湖里居民與內科人設計的選物體驗</h3>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold mb-4">01</div>
+          <h4 id="f1-title" class="font-bold text-lg mb-2">午休預訂・下班順路快取</h4>
+          <p id="f1-desc" class="text-sm text-stone-600 leading-relaxed">不用擔心下班趕時間！透過 LINE 選擇花束色系與預算，18:30 走去西湖捷運站路上直接取走現成美花。</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold mb-4">02</div>
+          <h4 id="f2-title" class="font-bold text-lg mb-2">告別傳統俗氣包裝</h4>
+          <p id="f2-desc" class="text-sm text-stone-600 leading-relaxed">捨棄亮面塑膠紙，全面採用日本進口霧面棉紙與天然麻繩，無論是同事升遷、客戶致贈或居家擺設都極具品味。</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold mb-4">03</div>
+          <h4 id="f3-title" class="font-bold text-lg mb-2">辦公室微光環境植栽診斷</h4>
+          <p id="f3-desc" class="text-sm text-stone-600 leading-relaxed">針對辦公桌冷氣房與日照不足環境，現場挑選最耐陰的觀葉植物，並附贈專屬養護小卡。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 說服力轉換模組 (Lead Magnet / 專屬優惠券) -->
+    <section id="conversion-offer" class="px-6 py-4 sm:px-12">
+      <div class="bg-gradient-to-br from-emerald-900 to-stone-900 text-white rounded-3xl p-8 sm:p-10 shadow-lg flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="space-y-3 max-w-lg">
+          <span class="bg-amber-400 text-stone-950 text-xs font-bold px-2.5 py-1 rounded">西湖里觀光地圖・讀者專屬禮遇</span>
+          <h3 id="offer-title" class="serif-title text-2xl sm:text-3xl font-bold">出示此畫面，到店享「週花束首購 9 折」或免費升級尤加利香氛葉材</h3>
+          <p class="text-stone-300 text-sm leading-relaxed">不需事先付款。點擊下方按鈕加入官方 LINE 或直接截圖此畫面，至西湖里門市出示即可立即折抵。</p>
+        </div>
+        <div class="w-full md:w-auto flex flex-col gap-3 shrink-0">
+          <button onclick="alert('已為您複製專屬優惠碼：XIHU2026，並即將開啟店家預約連結！')" class="bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold px-8 py-4 rounded-xl text-center shadow-md transition">
+            一鍵領取優惠碼 (XIHU2026)
+          </button>
+          <span class="text-center text-xs text-stone-400">本月已有 142 位內湖顧客領取</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 真實 Google Maps 顧客評價 -->
+    <section class="px-6 py-12 sm:px-12">
+      <div class="flex items-end justify-between mb-8">
+        <div>
+          <span class="text-emerald-700 text-xs font-bold tracking-widest uppercase">Google Maps Reviews</span>
+          <h3 class="serif-title text-2xl font-bold text-stone-900 mt-1">在地居民與內科人的真實評價</h3>
+        </div>
+        <div class="text-right hidden sm:block">
+          <div class="text-amber-500 font-bold text-lg">★★★★★ 4.9 / 5.0</div>
+          <div class="text-xs text-stone-500">基於 Google Maps 真實顧客評論</div>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="text-amber-400 text-sm mb-3">★★★★★</div>
+            <p id="rev1-text" class="text-stone-700 text-sm leading-relaxed mb-4">
+              「就在西湖站 285 巷轉角附近，花材非常新鮮且配色很有法式高級感，不是那種傳統花店。臨時要買送同事的離職花束，花藝師包裝速度很快！」
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-4 border-t border-stone-100 text-xs text-stone-500">
+            <span id="rev1-author" class="font-bold text-stone-800">陳小姐・Google 在地嚮導</span>
+            <span>西湖里門市親訪評價</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="text-amber-400 text-sm mb-3">★★★★★</div>
+            <p id="rev2-text" class="text-stone-700 text-sm leading-relaxed mb-4">
+              「店面雖然不大但一走進去滿滿的尤加利葉香氣，買了兩盆小鹿角蕨放在內科辦公室桌上看得很療癒，老闆還會細心教怎麼澆水。」
+            </p>
+          </div>
+          <div class="flex items-center justify-between pt-4 border-t border-stone-100 text-xs text-stone-500">
+            <span id="rev2-author" class="font-bold text-stone-800">Mark Lin・內科科技業</span>
+            <span>西湖里門市親訪評價</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 店鋪必要資訊與精準地址 (NAP: Name, Address, Phone) -->
+    <section id="location-info" class="px-6 py-8 sm:px-12">
+      <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm grid md:grid-cols-5">
+        <div class="p-6 sm:p-8 md:col-span-3 space-y-5">
+          <div>
+            <span id="info-category" class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded">實體零售・花藝與植栽選物</span>
+            <h3 id="info-name" class="serif-title text-2xl font-bold text-stone-900 mt-2">蒔光花藝選物 Maison Flora</h3>
+          </div>
+
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start gap-3">
+              <span class="text-stone-400 shrink-0 mt-0.5">📍 地址</span>
+              <div>
+                <p id="info-address" class="font-medium text-stone-900">114 台北市內湖區內湖路一段 285 巷 65 弄 X 號 1 樓（西湖里）</p>
+                <p class="text-xs text-stone-500 mt-0.5">捷運西湖站 1 號出口步行約 3 分鐘，近西湖市場後方靜巷</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="text-stone-400 shrink-0 mt-0.5">🕒 時間</span>
+              <div>
+                <p id="info-hours" class="font-medium text-stone-900">週一至週六 11:00 – 19:30（週日公休）</p>
+                <p class="text-xs text-emerald-700 mt-0.5">＊支援 18:00–19:30 下班時段免下車快取</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="text-stone-400 shrink-0 mt-0.5">📞 聯絡</span>
+              <div>
+                <p id="info-phone" class="font-medium text-stone-900">(02) 2658-XXXX</p>
+                <p class="text-xs text-stone-500 mt-0.5">LINE 官方帳號：@xihu-flora｜支援街口支付、LINE Pay、信用卡</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 視覺化地圖指引區 -->
+        <div class="bg-stone-100 p-6 flex flex-col items-center justify-center text-center md:col-span-2 border-t md:border-t-0 md:border-l border-stone-200">
+          <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl mb-3">🗺️</div>
+          <p class="font-bold text-stone-800 text-sm mb-1">位於台北市內湖區「西湖里」</p>
+          <p class="text-xs text-stone-500 mb-5 px-4">點擊下方按鈕直接開啟 Google Maps 導航至店門口</p>
+          <a id="map-link" href="https://www.google.com/maps/search/?api=1&query=台北市內湖區內湖路一段285巷" target="_blank" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow">
+            開啟 Google Maps 精準導航 ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 手機版底部固定高轉換列 (Sticky Mobile CTA) -->
+  <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-3 z-50 sm:hidden">
+    <div class="flex gap-2 max-w-md mx-auto">
+      <a href="tel:0226580000" class="flex-1 bg-stone-100 text-stone-800 font-bold py-3 rounded-xl text-center text-sm">
+        📞 電話洽詢
+      </a>
+      <a href="#conversion-offer" class="flex-[2] bg-emerald-600 text-white font-bold py-3 rounded-xl text-center text-sm shadow-md">
+        🎁 領取 9 折＆LINE 預訂
+      </a>
+    </div>
+  </div>
+
+  <!-- 動態切換 3 家西湖里店鋪資料之腳本 -->
+  <script>
+    const shops = {
+      flora: {
+        badge: '西湖捷運站 1 號出口步行 3 分鐘・營業中',
+        title: '把法式街角的自然呼吸，<br>帶進你的內科日常。',
+        subtitle: '位於西湖里 285 巷靜謐轉角。我們每日清晨嚴選新鮮葉材與進口鮮花，為忙碌的內科人提供「線上預訂、下班免等快取」的質感花禮與辦公室療癒植栽。',
+        img: 'https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=1600&q=85',
+        cta: '領取首次到店 9 折＆預訂快取',
+        f1t: '午休預訂・下班順路快取', f1d: '不用擔心下班趕時間！透過 LINE 選擇花束色系與預算，18:30 走去西湖捷運站路上直接取走現成美花。',
+        f2t: '告別傳統俗氣包裝', f2d: '捨棄亮面塑膠紙，全面採用日本進口霧面棉紙與天然麻繩，無論是同事升遷、客戶致贈或居家擺設都極具品味。',
+        f3t: '辦公室微光環境植栽診斷', f3d: '針對辦公桌冷氣房與日照不足環境，現場挑選最耐陰的觀葉植物，並附贈專屬養護小卡。',
+        offer: '出示此畫面，到店享「週花束首購 9 折」或免費升級尤加利香氛葉材',
+        r1t: '「就在西湖站 285 巷轉角附近，花材非常新鮮且配色很有法式高級感，不是那種傳統花店。臨時要買送同事的離職花束，花藝師包裝速度很快！」', r1a: '陳小姐・Google 在地嚮導',
+        r2t: '「店面雖然不大但一走進去滿滿的尤加利葉香氣，買了兩盆小鹿角蕨放在內科辦公室桌上看得很療癒，老闆還會細心教怎麼澆水。」', r2a: 'Mark Lin・內科科技業',
+        cat: '實體零售・花藝與植栽選物', name: '蒔光花藝選物 Maison Flora',
+        addr: '114 台北市內湖區內湖路一段 285 巷 65 弄 X 號 1 樓（西湖里）',
+        hours: '週一至週六 11:00 – 19:30（週日公休）', phone: '(02) 2658-XXXX',
+        map: 'https://www.google.com/maps/search/?api=1&query=台北市內湖區內湖路一段285巷'
+      },
+      coffee: {
+        badge: '西湖里環山路一段・今日新鮮出爐熟豆供應中',
+        title: '每一口乾淨明亮的果香，<br>都是西湖里巷弄的烘焙執著。',
+        subtitle: '坐落於西湖里環山路靜巷的自家烘焙咖啡豆與器材專門店。堅持三次手工挑除瑕疵豆，為講究風味的你提供單品熟豆、企業耳掛禮盒與日本職人手沖器具。',
+        img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=85',
+        cta: '免費領取「單品濾掛試飲包」兌換券',
+        f1t: '買豆免費試飲手沖', f1d: '不確定哪支豆子適合自己？店內提供當週主打單品現場試飲，喜歡那個風味層次再帶走。',
+        f2t: '三次手挑瑕疵豆・極致乾淨度', f2d: '生豆入爐前與出爐後皆經過嚴格人工挑豆，喝起來不心悸、不苦澀，冷掉依然帶有清甜茶感。',
+        f3t: '手沖器材一站式實測選購', f3d: '展售日本製濾杯、手搖磨豆機與溫控手沖壺，現場教你調整研磨刻度與水溫比例。',
+        offer: '出示此畫面，購買任一包半磅熟豆，免費加贈「莊園級單品耳掛包 2 入」',
+        r1t: '「西湖里一帶最專業的自家烘焙豆子專賣店！老闆對淺焙衣索比亞跟水洗豆的處理非常到位，買豆子還會先請喝一杯手沖試味道，完全不踩雷。」', r1a: '吳先生・西湖里住戶',
+        r2t: '「包裝很有設計感，常買他們家的耳掛禮盒送客戶。店裡也有賣日本製的手沖壺跟濾杯，價格很公道。」', r2a: '許小姐・Google 在地嚮導',
+        cat: '實體零售・自家烘焙咖啡豆與器材專賣', name: '環山焙豆所 Huanshan Roastery',
+        addr: '114 台北市內湖區環山路一段 XX 號 1 樓（西湖里）',
+        hours: '週二至週日 10:30 – 19:00（週一烘豆公休）', phone: '(02) 2799-XXXX',
+        map: 'https://www.google.com/maps/search/?api=1&query=台北市內湖區環山路一段'
+      },
+      zakka: {
+        badge: '西湖市場後方靜巷・日本岐阜美濃燒新到貨',
+        title: '讓下班後的每一頓晚餐，<br>都像在京都小店裡盛裝。',
+        subtitle: '隱身於西湖里巷弄的日本器皿與生活雜貨獨立選物店。親赴日本窯場與職人工作室選品，將溫潤手作陶器、木質餐具與天然香氛帶進你的居家餐桌。',
+        img: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1600&q=85',
+        cta: '查看本週日本新到貨＆領取禮盒包裝券',
+        f1t: '日本產地直送・親民定價', f1d: '省去百貨專櫃高昂抽成，在西湖里巷弄就能用實惠價格入手正統日本美濃燒、波佐見燒與職人木器。',
+        f2t: '免費日式禮物包裝服務', f2d: '需要準備入厝禮、結婚禮或同事交換禮物？我們提供質感和紙與麻繩免費包裝，送禮體面又有溫度。',
+        f3t: '實體觸摸的溫潤手感', f3d: '網購餐具常有色差與重量落差，在店內你可以親自拿起每一只茶碗與馬克杯，找到最合手的那一件。',
+        offer: '出示此畫面，全館器皿滿 $1,000 現折 $100，再享免費日式禮盒包裝',
+        r1t: '「藏在 285 巷弄裡的寶藏小店！原本只是來西湖市場附近覓食，無意間走進來就出不去了。日本進口的碗盤質感超好，價格比百貨公司親民很多。」', r1a: '曾小姐・內湖上班族',
+        r2t: '「老闆娘挑貨眼光極佳，店面擺設讓人逛起來毫無壓力，買了一組富士山杯跟木托盤當朋友的結婚禮物，免費包裝得非常精緻！」', r2a: 'Kevin・Google 在地嚮導',
+        cat: '實體零售・日本食器與生活雜貨選物', name: '日日器皿雜貨 Nichinichi Zakka',
+        addr: '114 台北市內湖區內湖路一段 285 巷 XX 弄 X 號（西湖里）',
+        hours: '週一至週日 12:00 – 20:30', phone: '(02) 8751-XXXX',
+        map: 'https://www.google.com/maps/search/?api=1&query=台北市內湖區內湖路一段285巷'
+      }
+    };
+
+    function switchShop(key) {
+      const s = shops[key];
+      document.getElementById('shop-badge').innerText = s.badge;
+      document.getElementById('hero-title').innerHTML = s.title;
+      document.getElementById('hero-subtitle').innerText = s.subtitle;
+      document.getElementById('hero-img').src = s.img;
+      document.getElementById('primary-cta-text').innerText = s.cta;
+      document.getElementById('f1-title').innerText = s.f1t;
+      document.getElementById('f1-desc').innerText = s.f1d;
+      document.getElementById('f2-title').innerText = s.f2t;
+      document.getElementById('f2-desc').innerText = s.f2d;
+      document.getElementById('f3-title').innerText = s.f3t;
+      document.getElementById('f3-desc').innerText = s.f3d;
+      document.getElementById('offer-title').innerText = s.offer;
+      document.getElementById('rev1-text').innerText = s.r1t;
+      document.getElementById('rev1-author').innerText = s.r1a;
+      document.getElementById('rev2-text').innerText = s.r2t;
+      document.getElementById('rev2-author').innerText = s.r2a;
+      document.getElementById('info-category').innerText = s.cat;
+      document.getElementById('info-name').innerText = s.name;
+      document.getElementById('info-address').innerText = s.addr;
+      document.getElementById('info-hours').innerText = s.hours;
+      document.getElementById('info-phone').innerText = s.phone;
+      document.getElementById('map-link').href = s.map;
+
+      ['flora', 'coffee', 'zakka'].forEach(k => {
+        const btn = document.getElementById('btn-' + k);
+        if (k === key) {
+          btn.className = 'px-3 py-1.5 rounded-full bg-stone-900 text-white whitespace-nowrap transition';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 whitespace-nowrap transition';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
