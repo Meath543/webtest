@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>內湖路一段285巷 - 2.5D 像素地圖</title>
+<style>
+  body {
+    margin: 0;
+    background-color: #1a1c2c;
+    color: #f4f4f4;
+    font-family: 'Courier New', Courier, monospace, 'Microsoft JhengHei';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #ui-bar {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(26, 28, 44, 0.9);
+    border: 3px solid #f4f4f4;
+    padding: 12px 16px;
+    box-shadow: 4px 4px 0px #000;
+    z-index: 10;
+  }
+  h1 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #ffcd75;
+    letter-spacing: 1px;
+  }
+  .btn {
+    background: #3b5dc9;
+    color: #fff;
+    border: 2px solid #f4f4f4;
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px #000;
+  }
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+  #tooltip {
+    position: absolute;
+    bottom: 20px;
+    background: rgba(26, 28, 44, 0.95);
+    border: 3px solid #ffcd75;
+    padding: 10px 18px;
+    font-size: 15px;
+    box-shadow: 4px 4px 0px #000;
+    pointer-events: none;
+  }
+  canvas {
+    image-rendering: pixelated;
+    cursor: crosshair;
+  }
+</style>
+</head>
+<body>
+
+<div id="ui-bar">
+  <h1>🗺️ 內湖路一段285巷 (2.5D Pixel Map)</h1>
+  <div style="font-size: 12px; margin-bottom: 8px; color: #a7f070;">
+    視角：南(捷運西湖站) ➔ 北(環山路/67弄)
+  </div>
+  <button class="btn" id="toggleTime">🌙 切換：白天 / 夜市模式</button>
+</div>
+
+<div id="tooltip">💡 移動滑鼠至建築物查看 285 巷地標資訊</div>
+<canvas id="mapCanvas" width="900" height="620"></canvas>
+
+<script>
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+
+let isNight = false;
+document.getElementById('toggleTime').addEventListener('click', () => {
+  isNight = !isNight;
+});
+
+// 2.5D Isometric 轉換參數
+const TILE_W = 48;
+const TILE_H = 24;
+const ORIGIN_X = 450;
+const ORIGIN_Y = 120;
+
+function toIso(gx, gy, gz = 0) {
+  return {
+    x: ORIGIN_X + (gx - gy) * (TILE_W / 2),
+    y: ORIGIN_Y + (gx + gy) * (TILE_H / 2) - gz
+  };
+}
+
+// 繪製 2.5D 立體方塊 (Building Block)
+function drawIsoBox(gx, gy, w, d, h, topColor, leftColor, rightColor, label, signColor) {
+  const p1 = toIso(gx, gy, h);
+  const p2 = toIso(gx + w, gy, h);
+  const p3 = toIso(gx + w, gy + d, h);
+  const p4 = toIso(gx, gy + d, h);
+
+  const b2 = toIso(gx + w, gy, 0);
+  const b3 = toIso(gx + w, gy + d, 0);
+  const b4 = toIso(gx, gy + d, 0);
+
+  // 左側面
+  ctx.fillStyle = leftColor;
+  ctx.beginPath();
+  ctx.moveTo(p4.x, p4.y);
+  ctx.lineTo(p3.x, p3.y);
+  ctx.lineTo(b3.x, b3.y);
+  ctx.lineTo(b4.x, b4.y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = '#1a1c2c';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // 右側面
+  ctx.fillStyle = rightColor;
+  ctx.beginPath();
+  ctx.moveTo(p2.x, p2.y);
+  ctx.lineTo(p3.x, p3.y);
+  ctx.lineTo(b3.x, b3.y);
+  ctx.lineTo(b2.x, b2.y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // 頂面 (屋頂)
+  ctx.fillStyle = topColor;
+  ctx.beginPath();
+  ctx.moveTo(p1.x, p1.y);
+  ctx.lineTo(p2.x, p2.y);
+  ctx.lineTo(p3.x, p3.y);
+  ctx.lineTo(p4.x, p4.y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // 像素窗戶與招牌細節
+  if (h >= 30) {
+    ctx.fillStyle = isNight ? '#ffcd75' : '#8fd3ff';
+    for (let z = 12; z < h - 8; z += 14) {
+      const winPos = toIso(gx + w * 0.5, gy + d, z);
+      ctx.fillRect(winPos.x - 6, winPos.y - 4, 4, 6);
+      ctx.fillRect(winPos.x + 2, winPos.y - 2, 4, 6);
+    }
+  }
+
+  // 側邊直立招牌
+  if (signColor) {
+    const sPos = toIso(gx + w, gy + d * 0.6, h * 0.6);
+    ctx.fillStyle = signColor;
+    ctx.fillRect(sPos.x - 4, sPos.y - 12, 8, 22);
+    ctx.strokeRect(sPos.x - 4, sPos.y - 12, 8, 22);
+  }
+
+  // 建築標籤
+  if (label) {
+    ctx.fillStyle = '#1a1c2c';
+    ctx.fillRect(p1.x - 42, p1.y - 22, 84, 16);
+    ctx.strokeStyle = '#ffcd75';
+    ctx.strokeRect(p1.x - 42, p1.y - 22, 84, 16);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px monospace, Microsoft JhengHei';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, p1.x, p1.y - 10);
+  }
+}
+
+// 285巷建築資料庫 (由北到南排序以正確遮擋)
+const buildings = [
+  { gx: 1, gy: 1, w: 3, d: 2, h: 45, top: '#38b764', left: '#d95763', right: '#b13e53', name: '🏫 西湖國中', desc: '位於285巷後段往環山路方向，綠意盎然的校園邊界' },
+  { gx: 7, gy: 1, w: 2, d: 2, h: 32, top: '#566c86', left: '#94b0c2', right: '#566c86', name: '🍢 古早味炭烤(69弄)', sign: '#ef7d57', desc: '285巷69弄人氣宵夜炭烤攤，週五至週日晚間營業' },
+  { gx: 2, gy: 4, w: 2, d: 2, h: 65, top: '#257179', left: '#c0cbdc', right: '#8b9bb4', name: '🍜 麵線陳(67弄)', sign: '#b13e53', desc: '285巷67弄1號，皮蛋蝦仁與大腸麵線超人氣名店' },
+  { gx: 7, gy: 4, w: 2, d: 2, h: 60, top: '#3b5dc9', left: '#ead4aa', right: '#d4a373', name: '🥞 68弄早午餐巷', sign: '#ffcd75', desc: '285巷68弄，聚集手作早午餐與精緻巷弄小館' },
+  { gx: 2, gy: 7, w: 2, d: 3, h: 75, top: '#257179', left: '#d0d0d0', right: '#9a9a9a', name: '🥤 飲料與便當街', sign: '#38b764', desc: '285巷中段，手搖飲、鍋貼、拉麵與各式便當店林立' },
+  { gx: 7, gy: 7, w: 2, d: 3, h: 70, top: '#a7f070', left: '#e4a672', right: '#b86f50', name: '🍜 巷弄小吃群', sign: '#ef7d57', desc: '內科上班族午餐最愛鑽進去的美食支線巷弄' },
+  { gx: 2, gy: 11, w: 2, d: 2, h: 55, top: '#b13e53', left: '#f4cca1', right: '#d4996a', name: '🐷 富滿堂豬腳(10號)', sign: '#e43b44', desc: '285巷10號，入口即化的腿庫與豬腳便當名店' },
+  { gx: 7, gy: 10, w: 3, d: 3, h: 90, top: '#566c86', left: '#94b0c2', right: '#566c86', name: '🏢 西湖市場 & 285大排檔', sign: '#ffcd75', desc: '1樓生鮮市場與285大排檔，2樓為百元美食街與捷運共構通道' },
+  { gx: 3, gy: 14, w: 7, d: 1.5, h: 48, top: '#41a6f6', left: '#73eff7', right: '#3b5dc9', name: '🚉 捷運西湖站 (文湖線)', desc: '內湖路一段主幹道地標，1號出口直通285巷美食商圈' }
+];
+
+// 動態行人與捷運列車
+let trainPos = 0;
+const peds = Array.from({ length: 14 }, () => ({
+  gy: Math.random() * 12 + 1,
+  gx: 4.5 + Math.random() * 2,
+  speed: (Math.random() * 0.03 + 0.01) * (Math.random() > 0.5 ? 1 : -1),
+  color: ['#ffcd75', '#73eff7', '#a7f070', '#ef7d57'][Math.floor(Math.random() * 4)]
+}));
+
+function drawGround() {
+  // 繪製底板街廓 (12 x 16)
+  for (let gx = 0; gx < 12; gx++) {
+    for (let gy = 0; gy < 16; gy++) {
+      const p1 = toIso(gx, gy);
+      const p2 = toIso(gx + 1, gy);
+      const p3 = toIso(gx + 1, gy + 1);
+      const p4 = toIso(gx, gy + 1);
+
+      // 判斷是否為 285 巷主幹道 (gx = 4, 5, 6) 或內湖路一段 (gy >= 13)
+      const isMainAlley = (gx >= 4 && gx <= 6 && gy < 14);
+      const isNeihuRd = (gy >= 13);
+      const isSideAlley = (gy === 3 || gy === 6 || gy === 10);
+
+      if (isNeihuRd) {
+        ctx.fillStyle = isNight ? '#262b44' : '#333c57';
+      } else if (isMainAlley) {
+        ctx.fillStyle = isNight ? '#333c57' : '#566c86';
+      } else if (isSideAlley) {
+        ctx.fillStyle = isNight ? '#2c354d' : '#465870';
+      } else {
+        ctx.fillStyle = isNight ? '#1f2438' : '#38455a';
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.lineTo(p3.x, p3.y);
+      ctx.lineTo(p4.x, p4.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+}
+
+function render() {
+  ctx.fillStyle = isNight ? '#11131f' : '#29364f';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawGround();
+
+  // 繪製 285 巷裡的移動行人與機車
+  peds.forEach(p => {
+    p.gy += p.speed;
+    if (p.gy > 13) p.gy = 1;
+    if (p.gy < 1) p.gy = 13;
+    const pos = toIso(p.gx, p.gy, 0);
+    // 像素小人
+    ctx.fillStyle = '#000';
+    ctx.fillRect(pos.x - 3, pos.y - 2, 6, 3);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(pos.x - 3, pos.y - 10, 6, 8);
+    ctx.fillStyle = '#f4cca1';
+    ctx.fillRect(pos.x - 2, pos.y - 14, 4, 4);
+  });
+
+  // 依照深度排序繪製建築
+  buildings.forEach(b => {
+    drawIsoBox(b.gx, b.gy, b.w, b.d, b.h, b.top, b.left, b.right, b.name, b.sign);
+  });
+
+  // 繪製文湖線高架列車動畫 (在內湖路一段上方移動)
+  trainPos = (trainPos + 0.04) % 12;
+  drawIsoBox(trainPos, 14.2, 1.8, 0.8, 14, '#ffffff', '#41a6f6', '#3b5dc9', null, null);
+
+  requestAnimationFrame(render);
+}
+
+// 滑鼠互動偵測
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  let found = null;
+  for (const b of buildings) {
+    const center = toIso(b.gx + b.w / 2, b.gy + b.d / 2, b.h / 2);
+    if (Math.hypot(mx - center.x, my - center.y) < 48) {
+      found = b;
+      break;
+    }
+  }
+  if (found) {
+    tooltip.innerHTML = `📍 <strong>${found.name}</strong>：${found.desc}`;
+  } else {
+    tooltip.innerHTML = `💡 移動滑鼠至建築物查看 285 巷地標資訊`;
+  }
+});
+
+render();
+</script>
+</body>
+</html>
